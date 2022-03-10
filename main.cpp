@@ -1,4 +1,12 @@
+/* Online Resources Used:
+https://www.cplusplus.com/reference/fstream/fstream/
+https://www.geeksforgeeks.org/c-program-hashing-chaining/
+https://www.geeksforgeeks.org/hashing-set-2-separate-chaining/
+https://www.journaldev.com/35238/hash-table-in-c-plus-plus
+*/
+
 #include <iostream>
+#include <fstream>
 #include <cstring>
 #include <iomanip>
 
@@ -16,7 +24,7 @@ struct student {
 void ADD(student** list, student* newStudent, int size);
 void PRINT(student** list, int size);
 void DELETE();
-bool checkCollision();
+bool checkCollision(student** list, int size);
 
 int main() {
   bool running = true;
@@ -56,6 +64,23 @@ int main() {
       cin.ignore(51, '\n');
       ADD(list, newStudent, size);
       cout << "Student Added." << endl << endl;
+      if (checkCollision(list, size)) {
+	cout << endl << "Rehashing Hash Table" << endl;
+	student** temp = new student*[size];
+	for (int i = 0; i < size; i++) {
+	  temp[i] = list[i];
+	}
+	int newSize = 2*size;
+	list = new student[newsize];
+	for (int i = 0; i < newSize; i++) {
+	  list[i] = NULL:
+	}
+	for (int i = 0; i < size; i++) {
+	  if (temp[i] != NULL) {
+	    student* move = temp[i];
+	  }
+	}
+      }
     }
     else if (strcmp(command, "ADDRAND") == 0 || strcmp(command, "Addrand") == 0) {
       cout << "add rand" << endl;
@@ -83,24 +108,29 @@ int main() {
   }
 }
 
-void ADD(student** list, student* newStudent, int size) {
+void ADD(student** list, student* newStudent, int size) { //Add function, used to manually add students in
   int index = (newStudent->ID) % size;
+  //Puts new student in current array
   if (list[index] == NULL) {
+    //No collision, add to list
     list[index] = newStudent;
   }
   else {
+    //Collision, add as the next pointer
     if ((list[index])->next == NULL) {
+      //No previous collisions
       (list[index])->next = newStudent;
       (list[index]->next)->prev = (list[index])->next;
     }
     else {
+      //Already a collision there
       ((list[index])->next)->next = newStudent;
       (((list[index])->next)->next)->prev = ((list[index])->next)->next;
     }
   }
 }
 
-void PRINT(student** list, int size) {
+void PRINT(student** list, int size) { //Print function, prints out all students in the table with their associated ID numbers and GPA
   for (int i = 0; i < size; i++) {
     student* current = list[i];
     if (current != NULL) {
@@ -120,4 +150,18 @@ void DELETE() {
 
 }
 
-//bool checkCollition() {}
+bool checkCollision(student** list, int size) { //checkCollision function, checks that there are not two different values at a given location in the table
+  bool newList = false; //True if there is a need to make a new list
+  int CC = 0;
+  while (newList == false && CC < size) {
+    if (list[CC] != NULL) {
+      if ((list[CC])->next != NULL) {
+	if (((list[CC])->next)->next != NULL) {
+	  newList = true;
+	}
+      }
+    }
+    CC++
+  }
+  return newList;
+}
