@@ -18,8 +18,3 @@ Poole
 Carney
 Morgan
 Jacobs
-Ford
-Carroll
-Finley
-Nguyen
-Park
